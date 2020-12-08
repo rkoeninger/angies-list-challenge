@@ -1,10 +1,12 @@
-import org.scalatest.FunSuite
-import Fibonacci._
+import org.scalatest.funsuite.AnyFunSuite
 
-class FibonacciTests extends FunSuite {
-  test("fibonacci") { assert(Vector(1, 1, 2, 3, 5, 8) == (1 to 6).map(fibonacci)) }
-  test("fibonacci2") { assert(Vector(1, 1, 2, 3, 5, 8) == (1 to 6).map(fibonacci2)) }
-  test("fibonacci3") { assert(Vector(1, 1, 2, 3, 5, 8) == (1 to 6).map(fibonacci3)) }
+class FibonacciTests extends AnyFunSuite {
+  private def testIt(f: Int => Int): Unit =
+    assert(Vector(1, 1, 2, 3, 5, 8) == (1 to 6).map(f))
+  test("naiveRecursive") { testIt(Fibonacci.naiveRecursive) }
+  test("linearIterative") { testIt(Fibonacci.linearIterative) }
+  test("linearTailRecursive") { testIt(Fibonacci.linearTailRecursive) }
+  test("constantTime") { testIt(Fibonacci.constantTime) }
 }
 
 // Dummy source
@@ -13,7 +15,7 @@ class CacheSource extends Source[String, Int] {
   def store(key: String, value: Int) = Unit
 }
 
-class DataStructuresTests extends FunSuite {
+class DataStructuresTests extends AnyFunSuite {
   test("LRUCache never exceeds max size") {
   	val maxSize = 10
   	val cache = new LRUCache[String, Int](new CacheSource(), maxSize)
@@ -48,7 +50,7 @@ class DataStructuresTests extends FunSuite {
   }
 }
 
-class FPPracticeTests extends FunSuite {
+class FPPracticeTests extends AnyFunSuite {
   test("Recursive equality") {
     assert(MyEmpty == MyEmpty)
     assert(MyNode(5, MyEmpty) == MyNode(5, MyEmpty))

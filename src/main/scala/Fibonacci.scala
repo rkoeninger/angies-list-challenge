@@ -10,22 +10,22 @@ object Fibonacci {
    * re-computes several values in the sequence many times
    * for no good reason.
    */
-  def fibonacci(n: Int): BigInt = n match {
-    case 1 => BigInt(1)
-    case 2 => BigInt(1)
-    case _ => fibonacci(n - 1) + fibonacci(n - 2)
+  def naiveRecursive(n: Int): Int = n match {
+    case 1 => 1
+    case 2 => 1
+    case _ => naiveRecursive(n - 1) + naiveRecursive(n - 2)
   }
 
   /**
    * Better performing, iterative implementation with an
    * old-fashioned for-loop.
    */
-  def fibonacci2(n: Int): BigInt = n match {
-    case 1 => BigInt(1)
-    case 2 => BigInt(1)
+  def linearIterative(n: Int): Int = n match {
+    case 1 => 1
+    case 2 => 1
     case _ => {
-      var x = BigInt(1)
-      var y = BigInt(1)
+      var x = 1
+      var y = 1
       for (_ <- 0 to (n - 3)) {
         val oldy = y
         y = x + y
@@ -39,16 +39,27 @@ object Fibonacci {
    * More idiomatic, tail-recursive implementation.
    * `recur` gets optimized back into a loop.
    */
-  def fibonacci3(n: Int): BigInt = n match {
-    case 1 => BigInt(1)
-    case 2 => BigInt(1)
+  def linearTailRecursive(n: Int): Int = n match {
+    case 1 => 1
+    case 2 => 1
     case _ => {
       @tailrec
-      def recur(x: BigInt, y: BigInt, m: Int): BigInt = m match {
+      def recur(x: Int, y: Int, m: Int): Int = m match {
         case 0 => y
         case _ => recur(y, x + y, m - 1)
       }
-      recur(BigInt(1), BigInt(1), n - 2)
+      recur(1, 1, n - 2)
     }
+  }
+
+  /**
+   * Constant-time implementation based on the fact that
+   * the ratio between successive elements in the sequence
+   * approaches the golden ratio.
+   */
+  def constantTime(n: Int): Int = {
+    val sqrt5 = Math.sqrt(5.0)
+    val gold = (1.0 + sqrt5) / 2.0
+    Math.round(Math.pow(gold, n) / sqrt5).asInstanceOf[Int]
   }
 }
